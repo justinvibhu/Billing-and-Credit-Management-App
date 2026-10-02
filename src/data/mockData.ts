@@ -1,6 +1,6 @@
 import type { Business, Customer, Invoice, Payment, Product } from "@/types";
 
-export const business: Business = { name: "Shree Ganesh Traders", address: "Pune, Maharashtra", phone: "98765 12345", gstin: "27ABCDE1234F1Z5", upi: "ganeshtraders@upi" };
+export const business: Business = { name: "Adsinfi Digital", address: "Pune, Maharashtra", phone: "98765 12345", gstin: "27ABCDE1234F1Z5", upi: "ganeshtraders@upi" };
 export const customers: Customer[] = [
   { id: "c1", name: "Rahul Patil", phone: "98765 43210", city: "Pune, Maharashtra", totalPurchases: 85400, totalPaid: 70000, outstanding: 15400, lastTransaction: "2025-10-02", dueDate: "2025-10-20" },
   { id: "c2", name: "Suresh Kumar", phone: "98220 11223", city: "Nashik, Maharashtra", totalPurchases: 62500, totalPaid: 54000, outstanding: 8500, lastTransaction: "2025-10-05", dueDate: "2025-10-12" },

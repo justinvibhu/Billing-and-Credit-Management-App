@@ -7,12 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "oxfmt"
+    "format": "oxfmt",
+    "firebase:login": "firebase login",
+    "firebase:deploy": "npm run build && firebase deploy --only hosting"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.9.1",
     "@tanstack/react-table": "^9.2.4",
     "date-fns": "^4.4.0",
+    "firebase": "^12.3.0",
     "i": "^0.3.7",
     "lucide-react": "^1.49.0",
     "react": "^19.0.0",
@@ -28,6 +31,7 @@
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "@vitejs/plugin-react": "^6.0.0",
+    "firebase-tools": "^14.0.0",
     "oxfmt": "^0.2.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.7.0",
