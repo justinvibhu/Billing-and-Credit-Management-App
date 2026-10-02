@@ -1,0 +1,2 @@
+import { useNavigate } from "react-router"; import { Button,Card } from "@/components/ui";
+export default function NotFound(){const navigate=useNavigate();return <Card className="mx-auto mt-20 max-w-lg p-10 text-center"><p className="font-display text-6xl font-extrabold text-brand-100">404</p><h1 className="mt-4 font-display text-2xl font-bold">Page not found</h1><p className="mt-2 text-slate-500">The page you're looking for doesn't exist or was moved.</p><Button className="mt-6" onClick={()=>navigate("/dashboard")}>Go to Dashboard</Button></Card>}

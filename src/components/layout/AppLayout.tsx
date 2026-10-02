@@ -1,0 +1,38 @@
+import { useState } from "react";
+import { NavLink, Outlet, useLocation, useNavigate } from "react-router";
+import { BarChart3, Bell, BookOpenCheck, Boxes, ChevronDown, CircleHelp, CreditCard, FileText, LayoutDashboard, Menu, Plus, ReceiptIndianRupee, Search, Settings, Users, WalletCards, X } from "lucide-react";
+import { Button, Input } from "@/components/ui";
+import { useApp } from "@/lib/store";
+import { money } from "@/utils/format";
+
+const navigation = [
+  { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard }, { label: "Billing", path: "/billing", icon: ReceiptIndianRupee }, { label: "Invoices", path: "/invoices", icon: FileText }, { label: "Customers", path: "/customers", icon: Users }, { label: "Credit / Udhar", path: "/credit", icon: BookOpenCheck }, { label: "Payments", path: "/payments", icon: WalletCards }, { label: "Reports", path: "/reports", icon: BarChart3 }, { label: "Products", path: "/products", icon: Boxes }, { label: "Settings", path: "/settings", icon: Settings },
+];
+const mobile = [navigation[0], navigation[1], navigation[3], navigation[4]];
+
+export default function AppLayout() {
+  const navigate = useNavigate(); const location = useLocation(); const { customers, invoices, products } = useApp();
+  const [more, setMore] = useState(false); const [search, setSearch] = useState(""); const [showSearch, setShowSearch] = useState(false);
+  const results = search.length > 1 ? [...customers.filter(x => x.name.toLowerCase().includes(search.toLowerCase())).map(x => ({ type: "Customer", label: x.name, detail: money(x.outstanding), path: `/customers/${x.id}` })), ...invoices.filter(x => x.number.toLowerCase().includes(search.toLowerCase())).map(x => ({ type: "Invoice", label: x.number, detail: x.customerName, path: `/invoices/${x.id}` })), ...products.filter(x => x.name.toLowerCase().includes(search.toLowerCase())).map(x => ({ type: "Product", label: x.name, detail: x.sku, path: "/products" }))].slice(0, 8) : [];
+  return <div className="min-h-screen">
+    <aside className="fixed inset-y-0 left-0 z-40 hidden w-64 flex-col border-r border-slate-200 bg-white lg:flex">
+      <div className="flex h-20 items-center gap-3 px-6"><div className="grid size-10 place-items-center rounded-xl bg-brand-500 text-white"><ReceiptIndianRupee className="size-6" /></div><div><p className="font-display text-lg font-extrabold text-slate-900">KhataFlow</p><p className="text-xs text-slate-400">Billing made simple</p></div></div>
+      <Button className="mx-5 mb-5" onClick={() => navigate("/billing")}><Plus className="size-4" /> Create Bill</Button>
+      <nav className="flex-1 space-y-1 px-3">{navigation.map(({ label, path, icon: Icon }) => <NavLink key={path} to={path} className={({ isActive }) => `flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-semibold transition ${isActive ? "bg-brand-50 text-brand-600" : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"}`}><Icon className="size-5" />{label}</NavLink>)}</nav>
+      <div className="m-4 rounded-2xl bg-slate-900 p-4 text-white"><p className="text-xs text-slate-400">Business account</p><p className="mt-1 text-sm font-bold">Shree Ganesh Traders</p><p className="mt-3 text-xs text-emerald-400">All data synced</p></div>
+    </aside>
+    <div className="lg:pl-64">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur md:px-8">
+        <div className="flex items-center gap-3 lg:hidden"><div className="grid size-9 place-items-center rounded-xl bg-brand-500 text-white"><ReceiptIndianRupee className="size-5" /></div><span className="font-display font-extrabold">KhataFlow</span></div>
+        <div className="relative hidden w-full max-w-lg lg:block"><Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-slate-400" /><Input className="bg-slate-50 pl-10" placeholder="Search customers, invoices, products..." value={search} onFocus={() => setShowSearch(true)} onChange={e => { setSearch(e.target.value); setShowSearch(true); }} />
+          {showSearch && search && <div className="absolute top-12 w-full rounded-2xl border border-slate-200 bg-white p-2 shadow-xl">{results.length ? results.map(r => <button key={r.type+r.label} onClick={() => { navigate(r.path); setShowSearch(false); setSearch(""); }} className="flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-left hover:bg-slate-50"><span><span className="block text-sm font-semibold">{r.label}</span><span className="text-xs text-slate-400">{r.type}</span></span><span className="text-xs text-slate-500">{r.detail}</span></button>) : <p className="p-4 text-center text-sm text-slate-500">No results found</p>}</div>}
+        </div>
+        <div className="ml-auto flex items-center gap-2"><Button variant="ghost" className="size-10 p-0 lg:hidden" onClick={() => setShowSearch(!showSearch)}><Search className="size-5" /></Button><Button variant="ghost" className="relative size-10 p-0"><Bell className="size-5" /><span className="absolute right-2 top-2 size-2 rounded-full bg-red-500" /></Button><div className="hidden items-center gap-3 pl-2 sm:flex"><div className="grid size-9 place-items-center rounded-full bg-amber-100 text-sm font-bold text-amber-700">SP</div><div className="hidden md:block"><p className="text-sm font-bold">Sanjay Patil</p><p className="text-xs text-slate-400">Owner</p></div><ChevronDown className="size-4 text-slate-400" /></div></div>
+        {showSearch && <div className="absolute inset-x-3 top-16 rounded-xl bg-white p-2 shadow-lg lg:hidden"><Input autoFocus placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} />{results.map(r => <button key={r.type+r.label} className="flex w-full justify-between p-3 text-sm" onClick={() => { navigate(r.path); setShowSearch(false); }}>{r.label}<span className="text-slate-400">{r.type}</span></button>)}</div>}
+      </header>
+      <main className="mx-auto max-w-screen-2xl p-4 pb-28 md:p-8 lg:pb-8"><Outlet /></main>
+    </div>
+    {more && <div className="fixed inset-0 z-40 bg-slate-950/40 lg:hidden" onClick={() => setMore(false)}><div className="absolute inset-x-0 bottom-20 rounded-t-3xl bg-white p-5" onClick={e => e.stopPropagation()}><div className="mb-4 flex items-center justify-between"><p className="font-display text-lg font-bold">More</p><Button variant="ghost" className="size-9 p-0" onClick={() => setMore(false)}><X className="size-5" /></Button></div><div className="grid grid-cols-3 gap-3">{[...navigation.slice(2,3), ...navigation.slice(5), { label: "Help", path: "/settings", icon: CircleHelp }].map(({label,path,icon:Icon}) => <button key={label} onClick={() => { navigate(path); setMore(false); }} className="flex min-h-24 flex-col items-center justify-center gap-2 rounded-2xl bg-slate-50 text-xs font-semibold"><Icon className="size-5 text-brand-500" />{label}</button>)}</div></div></div>}
+    <nav className="fixed inset-x-0 bottom-0 z-50 grid grid-cols-5 border-t border-slate-200 bg-white px-2 pb-[env(safe-area-inset-bottom)] lg:hidden">{mobile.map(({label,path,icon:Icon}) => <button key={path} onClick={() => navigate(path)} className={`flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-semibold ${location.pathname.startsWith(path) ? "text-brand-500" : "text-slate-400"}`}><Icon className="size-5" />{label === "Dashboard" ? "Home" : label === "Credit / Udhar" ? "Credit" : label}</button>)}<button onClick={() => setMore(true)} className="flex min-h-16 flex-col items-center justify-center gap-1 text-[11px] font-semibold text-slate-400"><Menu className="size-5" />More</button></nav>
+  </div>;
+}

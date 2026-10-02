@@ -1,0 +1,16 @@
+{
+  "title": "Billing and Credit SaaS",
+  "description": "Billing and credit management dashboard",
+  "language": "en",
+  "robots": { "index": true },
+  "icons": { "icon": "" },
+  "openGraph": { "image": "" },
+  "analytics": { "googleAnalyticsId": "" },
+  "customScripts": {
+    "headStart": "",
+    "headEnd": "",
+    "bodyStart": "",
+    "bodyEnd": ""
+  },
+  "accessibility": { "addBypassLinks": false }
+}
